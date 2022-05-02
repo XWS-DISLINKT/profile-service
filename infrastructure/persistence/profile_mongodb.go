@@ -35,6 +35,7 @@ func (collection *ProfileMongoDb) GetAll() ([]*domain.Profile, error) {
 }
 
 func (collection *ProfileMongoDb) Insert(profile *domain.Profile) error {
+	profile.Id = primitive.NewObjectID()
 	result, err := collection.profiles.InsertOne(context.TODO(), profile)
 	if err != nil {
 		return err
