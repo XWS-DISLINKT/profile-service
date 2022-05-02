@@ -49,3 +49,12 @@ func (handler *ProfileHandler) GetAll(ctx context.Context, request *pb.GetAllReq
 	}
 	return response, nil
 }
+
+func (handler *ProfileHandler) Create(ctx context.Context, request *pb.CreateProfileRequest) (*pb.CreateProfileResponse, error) {
+	profile := mapNewProfile(request.Profile)
+	err := handler.service.Create(profile)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CreateProfileResponse{Profile: mapProfile(profile)}, nil
+}
