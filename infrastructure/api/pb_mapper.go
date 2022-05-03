@@ -25,6 +25,7 @@ func mapToDomain(profilePb *pb.Profile) *domain.Profile {
 		Education:   make([]domain.Education, 0),
 		Skills:      make([]string, 0),
 		Interests:   make([]string, 0),
+		IsPrivate:   profilePb.IsPrivate,
 	}
 
 	for _, skillPb := range profilePb.Skills {
@@ -74,6 +75,7 @@ func mapProfile(profile *domain.Profile) *pb.Profile {
 		Education:   make([]*pb.Education, 0),
 		Skills:      make([]string, 0),
 		Interests:   make([]string, 0),
+		IsPrivate:   profile.IsPrivate,
 	}
 
 	for _, skill := range profile.Skills {
@@ -123,6 +125,7 @@ func mapNewProfile(profilePb *pb.NewProfile) *domain.Profile {
 		Education:   nil,
 		Skills:      nil,
 		Interests:   nil,
+		IsPrivate:   profilePb.IsPrivate,
 	}
 	return profile
 }

@@ -21,4 +21,5 @@ type Profile struct {
 	Education   []Education        `bson:"education"`
 	Skills      []string           `bson:"skills"`
 	Interests   []string           `bson:"interests"`
+	IsPrivate   bool               `bson:"isPrivate"`
 }
