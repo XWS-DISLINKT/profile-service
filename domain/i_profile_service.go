@@ -2,6 +2,7 @@ package domain
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"profile-service/dto"
 )
 
 type IProfileService interface {
@@ -11,4 +12,5 @@ type IProfileService interface {
 	DeleteAll()
 	Update(id primitive.ObjectID, profile *Profile) (*Profile, error)
 	GetByName(name string) ([]*Profile, error)
+	GetCredentials(username string) (*dto.CredentialsDTO, error)
 }

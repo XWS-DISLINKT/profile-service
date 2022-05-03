@@ -3,6 +3,7 @@ package application
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"profile-service/domain"
+	"profile-service/dto"
 )
 
 type ProfileService struct {
@@ -33,4 +34,8 @@ func (service *ProfileService) Update(id primitive.ObjectID, profile *domain.Pro
 
 func (service *ProfileService) GetByName(name string) ([]*domain.Profile, error) {
 	return service.iProfileService.GetByName(name)
+}
+
+func (service *ProfileService) GetCredentials(username string) (*dto.CredentialsDTO, error) {
+	return service.iProfileService.GetCredentials(username)
 }

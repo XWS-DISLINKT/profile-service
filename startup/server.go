@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"net/http"
 	"profile-service/application"
 	"profile-service/domain"
 	"profile-service/infrastructure/api"
@@ -73,4 +74,8 @@ func (server *Server) startGrpcServer(profileHandler *api.ProfileHandler) {
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
+}
+
+func (server *Server) initHandlers(service *api.ProfileHandler) {
+	http.HandleFunc("/credentials/{username}", service.GetCredentials)
 }

@@ -2,8 +2,11 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	pb "github.com/XWS-DISLINKT/dislinkt/common/proto/profile-service"
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"net/http"
 	"profile-service/application"
 )
 
@@ -85,4 +88,15 @@ func (handler *ProfileHandler) Update(ctx context.Context, request *pb.UpdatePro
 		return nil, er
 	}
 	return &pb.UpdateProfileResponse{Profile: mapProfile(updatedProfile)}, nil
+}
+
+func (handler *ProfileHandler) GetCredentials(writer http.ResponseWriter, request *http.Request) {
+	username := mux.Vars(request)["username"]
+	credentialsDTO, err := handler.service.GetCredentials(username)
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+	json.NewEncoder(writer).Encode(credentialsDTO)
 }

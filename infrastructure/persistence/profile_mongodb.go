@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"profile-service/domain"
+	"profile-service/dto"
 )
 
 const (
@@ -79,6 +80,19 @@ func (collection *ProfileMongoDb) Update(id primitive.ObjectID, profile *domain.
 func (collection *ProfileMongoDb) GetByName(name string) ([]*domain.Profile, error) {
 	filter := bson.D{{"$text", bson.D{{"$search", name}}}, {"isPrivate", false}}
 	return collection.filter(filter)
+}
+
+func (collection *ProfileMongoDb) GetCredentials(username string) (*dto.CredentialsDTO, error) {
+	filter := bson.M{"username": username}
+	profile, err := collection.filterOne(filter)
+	if err != nil {
+		return nil, err
+	}
+	credentialsDTO := &dto.CredentialsDTO{
+		Username: profile.Username,
+		Password: profile.Password,
+	}
+	return credentialsDTO, nil
 }
 
 func (collection *ProfileMongoDb) filter(filter interface{}) ([]*domain.Profile, error) {
