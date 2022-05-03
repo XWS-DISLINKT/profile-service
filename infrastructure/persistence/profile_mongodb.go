@@ -76,6 +76,11 @@ func (collection *ProfileMongoDb) Update(id primitive.ObjectID, profile *domain.
 	return collection.filterOne(filter)
 }
 
+func (collection *ProfileMongoDb) GetByName(name string) ([]*domain.Profile, error) {
+	filter := bson.D{{"$text", bson.D{{"$search", name}}}}
+	return collection.filter(filter)
+}
+
 func (collection *ProfileMongoDb) filter(filter interface{}) ([]*domain.Profile, error) {
 	cursor, err := collection.profiles.Find(context.TODO(), filter)
 	defer cursor.Close(context.TODO())

@@ -10,4 +10,5 @@ type IProfileService interface {
 	Insert(profile *Profile) error
 	DeleteAll()
 	Update(id primitive.ObjectID, profile *Profile) (*Profile, error)
+	GetByName(name string) ([]*Profile, error)
 }

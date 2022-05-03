@@ -30,6 +30,13 @@ var profiles = []*domain.Profile{
 		Username: "pera",
 		Password: "pera",
 	},
+	{
+		Id:       getObjectId("623b0cc3a34d25d8567f9f84"),
+		Name:     "pera",
+		LastName: "petrovic",
+		Username: "pera",
+		Password: "pera",
+	},
 }
 
 func getObjectId(id string) primitive.ObjectID {

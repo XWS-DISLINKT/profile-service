@@ -30,3 +30,7 @@ func (service *ProfileService) Create(profile *domain.Profile) error {
 func (service *ProfileService) Update(id primitive.ObjectID, profile *domain.Profile) (*domain.Profile, error) {
 	return service.iProfileService.Update(id, profile)
 }
+
+func (service *ProfileService) GetByName(name string) ([]*domain.Profile, error) {
+	return service.iProfileService.GetByName(name)
+}
