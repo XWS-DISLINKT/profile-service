@@ -19,6 +19,6 @@ type Profile struct {
 	Headline    string             `bson:"headline"`
 	Experience  []Experience       `bson:"experience"`
 	Education   []Education        `bson:"education"`
-	Skills      []Skill            `bson:"skills"`
-	Interests   []Interest         `bson:"interests"`
+	Skills      []string           `bson:"skills"`
+	Interests   []string           `bson:"interests"`
 }

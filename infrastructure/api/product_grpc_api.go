@@ -58,3 +58,17 @@ func (handler *ProfileHandler) Create(ctx context.Context, request *pb.CreatePro
 	}
 	return &pb.CreateProfileResponse{Profile: mapProfile(profile)}, nil
 }
+
+func (handler *ProfileHandler) Update(ctx context.Context, request *pb.UpdateProfileRequest) (*pb.UpdateProfileResponse, error) {
+	id := request.Id
+	profile := request.Profile
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	updatedProfile, er := handler.service.Update(objectId, mapToDomain(profile))
+	if er != nil {
+		return nil, er
+	}
+	return &pb.UpdateProfileResponse{Profile: mapProfile(updatedProfile)}, nil
+}

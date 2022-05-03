@@ -26,3 +26,7 @@ func (service *ProfileService) GetAll() ([]*domain.Profile, error) {
 func (service *ProfileService) Create(profile *domain.Profile) error {
 	return service.iProfileService.Insert(profile)
 }
+
+func (service *ProfileService) Update(id primitive.ObjectID, profile *domain.Profile) (*domain.Profile, error) {
+	return service.iProfileService.Update(id, profile)
+}

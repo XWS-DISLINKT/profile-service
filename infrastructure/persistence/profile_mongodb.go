@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -46,6 +47,33 @@ func (collection *ProfileMongoDb) Insert(profile *domain.Profile) error {
 
 func (collection *ProfileMongoDb) DeleteAll() {
 	collection.profiles.DeleteMany(context.TODO(), bson.D{{}})
+}
+
+func (collection *ProfileMongoDb) Update(id primitive.ObjectID, profile *domain.Profile) (*domain.Profile, error) {
+	result, err := collection.profiles.UpdateOne(
+		context.TODO(), bson.M{"_id": id}, bson.D{
+			{"$set", bson.D{
+				{"name", profile.Name},
+				{"lastName", profile.LastName},
+				{"username", profile.Username},
+				{"email", profile.Email},
+				{"password", profile.Password},
+				{"dateOfBirth", profile.DateOfBirth},
+				{"phoneNumber", profile.PhoneNumber},
+				{"gender", profile.Gender},
+				{"biography", profile.Biography},
+				{"experience", profile.Experience},
+				{"education", profile.Education},
+				{"skills", profile.Skills},
+				{"interests", profile.Interests},
+			}},
+		})
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("Updated %v", result.ModifiedCount)
+	filter := bson.M{"_id": id}
+	return collection.filterOne(filter)
 }
 
 func (collection *ProfileMongoDb) filter(filter interface{}) ([]*domain.Profile, error) {

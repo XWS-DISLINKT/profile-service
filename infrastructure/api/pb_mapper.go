@@ -8,6 +8,55 @@ import (
 	"time"
 )
 
+func mapToDomain(profilePb *pb.Profile) *domain.Profile {
+	profile := &domain.Profile{
+		Id:          getObjectId(profilePb.Id),
+		Name:        profilePb.Name,
+		LastName:    profilePb.LastName,
+		Username:    profilePb.Username,
+		Email:       profilePb.Email,
+		Password:    profilePb.Password,
+		DateOfBirth: profilePb.DateOfBirth.AsTime(),
+		PhoneNumber: profilePb.PhoneNumber,
+		Gender:      domain.Gender(profilePb.Gender),
+		Biography:   profilePb.Biography,
+		Headline:    profilePb.Headline,
+		Experience:  make([]domain.Experience, 0),
+		Education:   make([]domain.Education, 0),
+		Skills:      make([]string, 0),
+		Interests:   make([]string, 0),
+	}
+
+	for _, skillPb := range profilePb.Skills {
+		skill := skillPb
+		profile.Skills = append(profile.Skills, skill)
+	}
+
+	for _, experiencePb := range profilePb.Experience {
+		experience := domain.Experience{
+			Id:          getObjectId(experiencePb.Id),
+			JobTitle:    experiencePb.JobTitle,
+			CompanyName: experiencePb.CompanyName,
+			Description: experiencePb.Description,
+			StartDate:   experiencePb.StartDate.AsTime(),
+			EndDate:     experiencePb.EndDate.AsTime(),
+		}
+		profile.Experience = append(profile.Experience, experience)
+	}
+
+	for _, educationPb := range profilePb.Education {
+		education := domain.Education{
+			Id:           getObjectId(educationPb.Id),
+			School:       educationPb.School,
+			FieldOfStudy: educationPb.FieldOfStudy,
+			Degree:       educationPb.Degree,
+		}
+		profile.Education = append(profile.Education, education)
+	}
+
+	return profile
+}
+
 func mapProfile(profile *domain.Profile) *pb.Profile {
 	profilePb := &pb.Profile{
 		Id:          profile.Id.Hex(),
@@ -23,8 +72,13 @@ func mapProfile(profile *domain.Profile) *pb.Profile {
 		Headline:    profile.Headline,
 		Experience:  make([]*pb.Experience, 0),
 		Education:   make([]*pb.Education, 0),
-		Skills:      make([]*pb.Skill, 0),
-		Interests:   make([]*pb.Interest, 0),
+		Skills:      make([]string, 0),
+		Interests:   make([]string, 0),
+	}
+
+	for _, skill := range profile.Skills {
+		skillPb := skill
+		profilePb.Skills = append(profilePb.Skills, skillPb)
 	}
 
 	for _, experience := range profile.Experience {
@@ -81,4 +135,11 @@ func mapGender(gender domain.Gender) pb.Profile_Gender {
 		return pb.Profile_Female
 	}
 	return pb.Profile_Other
+}
+
+func getObjectId(id string) primitive.ObjectID {
+	if objectId, err := primitive.ObjectIDFromHex(id); err == nil {
+		return objectId
+	}
+	return primitive.NewObjectID()
 }
