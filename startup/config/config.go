@@ -8,7 +8,7 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		Port:          "8002",      //os.Getenv("PROFILE_SERVICE_PORT"),
+		Port:          "8001",      //os.Getenv("PROFILE_SERVICE_PORT"),
 		ProfileDBHost: "localhost", //os.Getenv("PROFILE_DB_HOST"),
 		ProfileDBPort: "27017",     //os.Getenv("PROFILE_DB_PORT"),
 	}
