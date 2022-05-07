@@ -91,6 +91,7 @@ func (collection *ProfileMongoDb) GetCredentials(username string) (*dto.Credenti
 	credentialsDTO := &dto.CredentialsDTO{
 		Username: profile.Username,
 		Password: profile.Password,
+		Id:       profile.Id.Hex(),
 	}
 	return credentialsDTO, nil
 }

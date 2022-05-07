@@ -93,6 +93,6 @@ func (handler *ProfileHandler) GetCredentials(ctx context.Context, request *pb.G
 	if err != nil {
 		return nil, err
 	}
-	response := &pb.GetCredentialsResponse{Username: credentials.Username, Password: credentials.Password}
+	response := &pb.GetCredentialsResponse{Username: credentials.Username, Password: credentials.Password, Id: credentials.Id}
 	return response, nil
 }
