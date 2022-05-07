@@ -78,7 +78,7 @@ func (collection *ProfileMongoDb) Update(id primitive.ObjectID, profile *domain.
 }
 
 func (collection *ProfileMongoDb) GetByName(name string) ([]*domain.Profile, error) {
-	filter := bson.D{{"$text", bson.D{{"$search", name}}}, {"isPrivate", false}}
+	filter := bson.D{{"name", name}, {"isPrivate", false}}
 	return collection.filter(filter)
 }
 
