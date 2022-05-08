@@ -1,5 +1,10 @@
 package config
 
+import (
+	"fmt"
+	"os"
+)
+
 type Config struct {
 	Port          string
 	ProfileDBHost string
@@ -7,9 +12,21 @@ type Config struct {
 }
 
 func NewConfig() *Config {
-	return &Config{
-		Port:          "8001",      //os.Getenv("PROFILE_SERVICE_PORT"),
-		ProfileDBHost: "localhost", //os.Getenv("PROFILE_DB_HOST"),
-		ProfileDBPort: "27017",     //os.Getenv("PROFILE_DB_PORT"),
+	if _, err := os.Stat("/.dockerenv"); err == nil {
+		fmt.Println("docker")
+
+		return &Config{
+			Port:          os.Getenv("PROFILE_SERVICE_PORT"),
+			ProfileDBHost: os.Getenv("PROFILE_DB_HOST"),
+			ProfileDBPort: os.Getenv("PROFILE_DB_PORT"),
+		}
+	} else {
+		fmt.Println("local")
+
+		return &Config{
+			Port:          "8001",
+			ProfileDBHost: "localhost",
+			ProfileDBPort: "27017",
+		}
 	}
 }
