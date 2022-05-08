@@ -29,7 +29,8 @@ func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) 
 	id := request.Id
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return nil, err
+		emptyProfile := pb.Profile{}
+		return &emptyProfile, nil
 	}
 	profile, err := handler.service.Get(objectId)
 	if err != nil {
