@@ -60,7 +60,7 @@ func (server *Server) initProfileService(iProfileService domain.IProfileService)
 }
 
 func (server *Server) initProfileHandler(service *application.ProfileService) *api.ProfileHandler {
-	return api.NewProfileHandler(service)
+	return api.NewProfileHandler(service, *server.config)
 }
 
 func (server *Server) startGrpcServer(profileHandler *api.ProfileHandler) {

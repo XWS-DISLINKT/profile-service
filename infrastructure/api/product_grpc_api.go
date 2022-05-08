@@ -2,19 +2,25 @@ package api
 
 import (
 	"context"
+	"fmt"
+	"github.com/XWS-DISLINKT/dislinkt/common/proto/connection-service"
 	pb "github.com/XWS-DISLINKT/dislinkt/common/proto/profile-service"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"profile-service/application"
+	"profile-service/infrastructure/services"
+	"profile-service/startup/config"
 )
 
 type ProfileHandler struct {
 	pb.UnsafeProfileServiceServer
-	service *application.ProfileService
+	service                  *application.ProfileService
+	connectionServiceAddress string
 }
 
-func NewProfileHandler(service *application.ProfileService) *ProfileHandler {
+func NewProfileHandler(service *application.ProfileService, config config.Config) *ProfileHandler {
 	return &ProfileHandler{
-		service: service,
+		service:                  service,
+		connectionServiceAddress: fmt.Sprintf("%s:%s", config.ConnectionHost, config.ConnectionPort),
 	}
 }
 
@@ -69,6 +75,12 @@ func (handler *ProfileHandler) Create(ctx context.Context, request *pb.CreatePro
 	err := handler.service.Create(profile)
 	if err != nil {
 		return nil, err
+	}
+
+	user := connection.User{UserId: profile.Id.Hex(), IsPrivate: profile.IsPrivate}
+	response, err := services.ConnectionsClient(handler.connectionServiceAddress).InsertUser(ctx, &user)
+	if !response.Success {
+		//implementirati sagu
 	}
 	return &pb.CreateProfileResponse{Profile: mapProfile(profile)}, nil
 }
