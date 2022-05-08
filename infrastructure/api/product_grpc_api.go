@@ -6,6 +6,7 @@ import (
 	"github.com/XWS-DISLINKT/dislinkt/common/proto/connection-service"
 	pb "github.com/XWS-DISLINKT/dislinkt/common/proto/profile-service"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"profile-service/application"
 	"profile-service/infrastructure/services"
 	"profile-service/startup/config"
@@ -24,7 +25,7 @@ func NewProfileHandler(service *application.ProfileService, config config.Config
 	}
 }
 
-func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
+func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb.Profile, error) {
 	id := request.Id
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -34,14 +35,11 @@ func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) 
 	if err != nil {
 		return nil, err
 	}
-	profilePb := mapProfile(profile)
-	response := &pb.GetResponse{
-		Profile: profilePb,
-	}
+	response := mapProfile(profile)
 	return response, nil
 }
 
-func (handler *ProfileHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
+func (handler *ProfileHandler) GetAll(ctx context.Context, request *emptypb.Empty) (*pb.GetAllResponse, error) {
 	profiles, err := handler.service.GetAll()
 	if err != nil {
 		return nil, err
@@ -70,8 +68,8 @@ func (handler *ProfileHandler) GetByName(ctx context.Context, request *pb.GetByN
 	return response, nil
 }
 
-func (handler *ProfileHandler) Create(ctx context.Context, request *pb.CreateProfileRequest) (*pb.CreateProfileResponse, error) {
-	profile := mapNewProfile(request.Profile)
+func (handler *ProfileHandler) Create(ctx context.Context, request *pb.NewProfile) (*pb.Profile, error) {
+	profile := mapNewProfile(request)
 	err := handler.service.Create(profile)
 	if err != nil {
 		return nil, err
@@ -82,12 +80,13 @@ func (handler *ProfileHandler) Create(ctx context.Context, request *pb.CreatePro
 	if !response.Success {
 		//implementirati sagu
 	}
-	return &pb.CreateProfileResponse{Profile: mapProfile(profile)}, nil
+
+	return mapProfile(profile), nil
 }
 
-func (handler *ProfileHandler) Update(ctx context.Context, request *pb.UpdateProfileRequest) (*pb.UpdateProfileResponse, error) {
+func (handler *ProfileHandler) Update(ctx context.Context, request *pb.Profile) (*pb.Profile, error) {
 	id := request.Id
-	profile := request.Profile
+	profile := request
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
@@ -96,7 +95,7 @@ func (handler *ProfileHandler) Update(ctx context.Context, request *pb.UpdatePro
 	if er != nil {
 		return nil, er
 	}
-	return &pb.UpdateProfileResponse{Profile: mapProfile(updatedProfile)}, nil
+	return mapProfile(updatedProfile), nil
 }
 
 func (handler *ProfileHandler) GetCredentials(ctx context.Context, request *pb.GetCredentialsRequest) (*pb.GetCredentialsResponse, error) {
