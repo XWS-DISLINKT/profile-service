@@ -110,7 +110,7 @@ func mapProfile(profile *domain.Profile) *pb.Profile {
 
 func mapNewProfile(profilePb *pb.NewProfile) *domain.Profile {
 	profile := &domain.Profile{
-		Id:          primitive.ObjectID{},
+		Id:          primitive.NewObjectID(),
 		Name:        profilePb.Name,
 		LastName:    profilePb.LastName,
 		Username:    profilePb.Username,
