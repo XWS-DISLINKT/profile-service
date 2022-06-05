@@ -20,7 +20,7 @@ var profiles = []*domain.Profile{
 				Id:           getObjectId("623b0cc3a34d25d8567f9f09"),
 				School:       "Fakultet tehnickih nauka, Novi Sad",
 				FieldOfStudy: "Softversko inzenjerstvo",
-				Degree:       "Master",
+				Degree:       "Master's degree",
 			},
 		},
 		Experience: []domain.Experience{
@@ -55,7 +55,7 @@ var profiles = []*domain.Profile{
 				Id:           getObjectId("623b0cc3a34d25d8567f9f09"),
 				School:       "Fakultet tehnickih nauka, Novi Sad",
 				FieldOfStudy: "Racunarstvo i automatika",
-				Degree:       "Bachelor",
+				Degree:       "Bachelor's degree",
 			},
 		},
 		Experience: []domain.Experience{
@@ -90,7 +90,7 @@ var profiles = []*domain.Profile{
 				Id:           getObjectId("623b0cc3a34d25d8567f9f09"),
 				School:       "Elektrotehnicki fakultet, Beograd",
 				FieldOfStudy: "Softversko inzenjerstvo",
-				Degree:       "Master",
+				Degree:       "Master-s degree",
 			},
 		},
 		Experience: []domain.Experience{
@@ -104,6 +104,70 @@ var profiles = []*domain.Profile{
 		Skills:    []string{"Python", "C", "SQL", "AWS"},
 		Interests: []string{"Artificial Intelligence", "Data Science", "Machine Learning"},
 		IsPrivate: false,
+	},
+	{
+		Id:          getObjectId("623b0cc3a34d25d8567f9f87"),
+		Name:        "Sara",
+		LastName:    "Jovanovic",
+		Username:    "sara",
+		Email:       "sara@gmail.com",
+		Password:    "sara",
+		PhoneNumber: "+381 69 123 45 67",
+		Biography:   "",
+		Education: []domain.Education{
+			{
+				Id:           getObjectId("623b0cc3a34d25d8567f9f09"),
+				School:       "Elektrotehnicki fakultet, Beograd",
+				FieldOfStudy: "Softversko inzenjerstvo",
+				Degree:       "Bachelor's degree",
+			},
+		},
+		Experience: []domain.Experience{
+			{
+				Id:          getObjectId("623b0cc3a34d25d8567f9f02"),
+				JobTitle:    "Software Developer",
+				CompanyName: "Seven Bridges, Serbia",
+				Description: "Full time",
+			},
+			{
+				Id:          getObjectId("623b0cc3a34d25d8567f9f02"),
+				JobTitle:    "Frontend Developer",
+				CompanyName: "IT Lab, Serbia",
+				Description: "Part time",
+			},
+		},
+		Skills:    []string{"Python", "C#", "NoSQL"},
+		Interests: []string{"Artificial Intelligence", "Data Science", "Machine Learning"},
+		IsPrivate: true,
+	},
+	{
+		Id:          getObjectId("623b0cc3a34d25d8567f9f88"),
+		Name:        "Filip",
+		LastName:    "Filipovic",
+		Username:    "filip",
+		Email:       "filip@gmail.com",
+		Password:    "filip",
+		PhoneNumber: "+381 66 123 45 67",
+		Biography:   "",
+		Education: []domain.Education{
+			{
+				Id:           getObjectId("623b0cc3a34d25d8567f9f09"),
+				School:       "Elektrotehnicki fakultet, Beograd",
+				FieldOfStudy: "Softversko inzenjerstvo",
+				Degree:       "Master's degree",
+			},
+		},
+		Experience: []domain.Experience{
+			{
+				Id:          getObjectId("623b0cc3a34d25d8567f9f02"),
+				JobTitle:    "Software Developer",
+				CompanyName: "Nordeus, Serbia",
+				Description: "Full time",
+			},
+		},
+		Skills:    []string{"Python", "C#", "NoSQL", "Java"},
+		Interests: []string{"Artificial Intelligence", "Gaming", "Machine Learning"},
+		IsPrivate: true,
 	},
 }
 
