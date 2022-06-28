@@ -146,3 +146,31 @@ func getObjectId(id string) primitive.ObjectID {
 	}
 	return primitive.NewObjectID()
 }
+
+func mapToDomainMessage(messagePb *pb.Message) *domain.Message {
+	message := &domain.Message{
+		Id:               primitive.NewObjectID(),
+		Text:             messagePb.Text,
+		Date:             messagePb.Date.AsTime(),
+		Seen:             messagePb.Seen,
+		SenderUsername:   messagePb.SenderUsername,
+		SenderId:         messagePb.SenderId,
+		ReceiverUsername: messagePb.ReceiverUsername,
+		ReceiverId:       messagePb.ReceiverId,
+	}
+	return message
+}
+
+func mapMessage(message *domain.Message) *pb.Message {
+	messagePb := &pb.Message{
+		Text:             message.Text,
+		Date:             timestamppb.New(message.Date),
+		Seen:             message.Seen,
+		SenderUsername:   message.SenderUsername,
+		SenderId:         message.SenderId,
+		ReceiverUsername: message.ReceiverUsername,
+		ReceiverId:       message.ReceiverId,
+	}
+
+	return messagePb
+}

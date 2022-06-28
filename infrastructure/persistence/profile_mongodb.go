@@ -11,18 +11,22 @@ import (
 )
 
 const (
-	DATABASE   = "profile"
-	COLLECTION = "profile"
+	DATABASE            = "profile"
+	COLLECTION          = "profile"
+	MESSAGES_COLLECTION = "messages"
 )
 
 type ProfileMongoDb struct {
 	profiles *mongo.Collection
+	messages *mongo.Collection
 }
 
 func NewProfileMongoDb(client *mongo.Client) domain.IProfileService {
 	profiles := client.Database(DATABASE).Collection(COLLECTION)
+	messages := client.Database(DATABASE).Collection(MESSAGES_COLLECTION)
 	return &ProfileMongoDb{
 		profiles: profiles,
+		messages: messages,
 	}
 }
 
@@ -44,6 +48,33 @@ func (collection *ProfileMongoDb) Insert(profile *domain.Profile) error {
 	}
 	profile.Id = result.InsertedID.(primitive.ObjectID)
 	return nil
+}
+
+func (collection *ProfileMongoDb) SendMessage(message *domain.Message) error {
+	result, err := collection.messages.InsertOne(context.TODO(), message)
+	if err != nil {
+		return err
+	}
+	message.Id = result.InsertedID.(primitive.ObjectID)
+	return nil
+}
+
+func (collection *ProfileMongoDb) GetChatMessages(senderId primitive.ObjectID, receiverId primitive.ObjectID) ([]*domain.Message, error) {
+	//filter := bson.D{{}}
+	filter := bson.M{
+		"$or": []bson.M{
+			{
+				"senderId":   senderId.Hex(),
+				"receiverId": receiverId.Hex(),
+			},
+			{
+				"senderId":   receiverId.Hex(),
+				"receiverId": senderId.Hex(),
+			},
+		},
+	}
+
+	return collection.filterMessages(filter)
 }
 
 func (collection *ProfileMongoDb) DeleteAll() {
@@ -112,6 +143,16 @@ func (collection *ProfileMongoDb) filterOne(filter interface{}) (profile *domain
 	return
 }
 
+func (collection *ProfileMongoDb) filterMessages(filter interface{}) ([]*domain.Message, error) {
+	cursor, err := collection.messages.Find(context.TODO(), filter)
+	defer cursor.Close(context.TODO())
+	if err != nil {
+		return nil, err
+	}
+
+	return decodeMessages(cursor)
+}
+
 func decode(cursor *mongo.Cursor) (profiles []*domain.Profile, err error) {
 	for cursor.Next(context.TODO()) {
 		var profile domain.Profile
@@ -120,6 +161,19 @@ func decode(cursor *mongo.Cursor) (profiles []*domain.Profile, err error) {
 			return
 		}
 		profiles = append(profiles, &profile)
+	}
+	err = cursor.Err()
+	return
+}
+
+func decodeMessages(cursor *mongo.Cursor) (messages []*domain.Message, err error) {
+	for cursor.Next(context.TODO()) {
+		var message domain.Message
+		err = cursor.Decode(&message)
+		if err != nil {
+			return
+		}
+		messages = append(messages, &message)
 	}
 	err = cursor.Err()
 	return

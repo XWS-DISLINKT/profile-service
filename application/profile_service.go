@@ -39,3 +39,11 @@ func (service *ProfileService) GetByName(name string) ([]*domain.Profile, error)
 func (service *ProfileService) GetCredentials(username string) (*dto.CredentialsDTO, error) {
 	return service.iProfileService.GetCredentials(username)
 }
+
+func (service *ProfileService) SendMessage(message *domain.Message) error {
+	return service.iProfileService.SendMessage(message)
+}
+
+func (service *ProfileService) GetChatMessages(senderId primitive.ObjectID, receiverId primitive.ObjectID) ([]*domain.Message, error) {
+	return service.iProfileService.GetChatMessages(senderId, receiverId)
+}

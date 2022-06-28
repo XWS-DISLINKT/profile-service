@@ -13,4 +13,6 @@ type IProfileService interface {
 	Update(id primitive.ObjectID, profile *Profile) (*Profile, error)
 	GetByName(name string) ([]*Profile, error)
 	GetCredentials(username string) (*dto.CredentialsDTO, error)
+	SendMessage(message *Message) error
+	GetChatMessages(senderId primitive.ObjectID, receiverId primitive.ObjectID) ([]*Message, error)
 }

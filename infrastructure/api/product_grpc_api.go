@@ -40,6 +40,24 @@ func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) 
 	return response, nil
 }
 
+func (handler *ProfileHandler) GetChatMessages(ctx context.Context, request *pb.GetMessagesRequest) (*pb.GetMessagesFromChat, error) {
+	senderId, err := primitive.ObjectIDFromHex(request.SenderId)
+	receiverId, err := primitive.ObjectIDFromHex(request.ReceiverId)
+	if err != nil {
+		return nil, err
+	}
+	response := &pb.GetMessagesFromChat{
+		Messages: []*pb.Message{},
+	}
+	messages, err := handler.service.GetChatMessages(senderId, receiverId)
+
+	for _, message := range messages {
+		current := mapMessage(message)
+		response.Messages = append(response.Messages, current)
+	}
+	return response, nil
+}
+
 func (handler *ProfileHandler) GetAll(ctx context.Context, request *emptypb.Empty) (*pb.GetAllResponse, error) {
 	profiles, err := handler.service.GetAll()
 	if err != nil {
@@ -83,6 +101,15 @@ func (handler *ProfileHandler) Create(ctx context.Context, request *pb.NewProfil
 	}
 
 	return mapProfile(profile), nil
+}
+
+func (handler *ProfileHandler) SendMessage(ctx context.Context, request *pb.Message) (*pb.Message, error) {
+	message := mapToDomainMessage(request)
+	err := handler.service.SendMessage(message)
+	if err != nil {
+		return nil, err
+	}
+	return mapMessage(message), nil
 }
 
 func (handler *ProfileHandler) Update(ctx context.Context, request *pb.Profile) (*pb.Profile, error) {

@@ -23,3 +23,14 @@ type Profile struct {
 	Interests   []string           `bson:"interests"`
 	IsPrivate   bool               `bson:"isPrivate"`
 }
+
+type Message struct {
+	Id               primitive.ObjectID `bson:"_id"`
+	Text             string             `bson:"text"`
+	Date             time.Time          `bson:"date"`
+	Seen             bool               `bson:"seen"`
+	SenderUsername   string             `bson:"senderUsername"`
+	SenderId         string             `bson:"senderId"`
+	ReceiverUsername string             `bson:"receiverUsername"`
+	ReceiverId       string             `bson:"receiverId"`
+}
