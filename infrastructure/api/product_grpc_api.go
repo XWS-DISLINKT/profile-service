@@ -123,6 +123,13 @@ func (handler *ProfileHandler) Update(ctx context.Context, request *pb.Profile) 
 	if er != nil {
 		return nil, er
 	}
+
+	user := connection.User{UserId: updatedProfile.Id.Hex(), IsPrivate: updatedProfile.IsPrivate}
+	response, err := services.ConnectionsClient(handler.connectionServiceAddress).UpdateUser(ctx, &user)
+	if !response.Success {
+		// saga
+	}
+	
 	return mapProfile(updatedProfile), nil
 }
 

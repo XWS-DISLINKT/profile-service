@@ -98,6 +98,7 @@ func (collection *ProfileMongoDb) Update(id primitive.ObjectID, profile *domain.
 				{"education", profile.Education},
 				{"skills", profile.Skills},
 				{"interests", profile.Interests},
+				{"isPrivate", profile.IsPrivate},
 			}},
 		})
 	if err != nil {
