@@ -104,6 +104,9 @@ func (collection *ProfileMongoDb) Update(id primitive.ObjectID, profile *domain.
 				{"skills", profile.Skills},
 				{"interests", profile.Interests},
 				{"isPrivate", profile.IsPrivate},
+				{"receivesConnectionNotifications", profile.ReceivesConnectionNotifications},
+				{"receivesMessageNotifications", profile.ReceivesMessageNotifications},
+				{"receivesPostNotifications", profile.ReceivesPostNotifications},
 			}},
 		})
 	if err != nil {

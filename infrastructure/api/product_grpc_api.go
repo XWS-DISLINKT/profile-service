@@ -40,6 +40,28 @@ func (handler *ProfileHandler) Get(ctx context.Context, request *pb.GetRequest) 
 	return response, nil
 }
 
+func (handler *ProfileHandler) UpdateNotificationSettings(ctx context.Context, request *pb.NotificationSettings) (*pb.Profile, error) {
+	id := request.Id
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		emptyProfile := pb.Profile{}
+		return &emptyProfile, nil
+	}
+	profile, err := handler.service.Get(objectId)
+	if err != nil {
+		return nil, err
+	}
+	profile.ReceivesMessageNotifications = request.ReceivesMessageNotifications
+	profile.ReceivesPostNotifications = request.ReceivesPostNotifications
+	profile.ReceivesConnectionNotifications = request.ReceivesConnectionNotifications
+	profile, err = handler.service.Update(objectId, profile)
+	if err != nil {
+		return nil, err
+	}
+	response := mapProfile(profile)
+	return response, nil
+}
+
 func (handler *ProfileHandler) GetChatMessages(ctx context.Context, request *pb.GetMessagesRequest) (*pb.GetMessagesFromChat, error) {
 	senderId, err := primitive.ObjectIDFromHex(request.SenderId)
 	receiverId, err := primitive.ObjectIDFromHex(request.ReceiverId)
