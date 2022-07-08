@@ -15,4 +15,6 @@ type IProfileService interface {
 	GetCredentials(username string) (*dto.CredentialsDTO, error)
 	SendMessage(message *Message) error
 	GetChatMessages(senderId primitive.ObjectID, receiverId primitive.ObjectID) ([]*Message, error)
+
+	InsertNotification(notification *Notification) error
 }

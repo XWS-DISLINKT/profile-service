@@ -52,6 +52,13 @@ func (server *Server) initIProfileService(client *mongo.Client) domain.IProfileS
 			log.Fatal(err)
 		}
 	}
+	for _, notification := range notifications {
+		err := collection.InsertNotification(notification)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	return collection
 }
 

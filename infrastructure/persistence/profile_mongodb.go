@@ -11,22 +11,26 @@ import (
 )
 
 const (
-	DATABASE            = "profile"
-	COLLECTION          = "profile"
-	MESSAGES_COLLECTION = "messages"
+	DATABASE                 = "profile"
+	COLLECTION               = "profile"
+	MESSAGES_COLLECTION      = "messages"
+	NOTIFICATIONS_COLLECTION = "notifications"
 )
 
 type ProfileMongoDb struct {
-	profiles *mongo.Collection
-	messages *mongo.Collection
+	profiles      *mongo.Collection
+	messages      *mongo.Collection
+	notifications *mongo.Collection
 }
 
 func NewProfileMongoDb(client *mongo.Client) domain.IProfileService {
 	profiles := client.Database(DATABASE).Collection(COLLECTION)
 	messages := client.Database(DATABASE).Collection(MESSAGES_COLLECTION)
+	notifications := client.Database(DATABASE).Collection(NOTIFICATIONS_COLLECTION)
 	return &ProfileMongoDb{
-		profiles: profiles,
-		messages: messages,
+		profiles:      profiles,
+		messages:      messages,
+		notifications: notifications,
 	}
 }
 
@@ -79,6 +83,7 @@ func (collection *ProfileMongoDb) GetChatMessages(senderId primitive.ObjectID, r
 
 func (collection *ProfileMongoDb) DeleteAll() {
 	collection.profiles.DeleteMany(context.TODO(), bson.D{{}})
+	collection.notifications.DeleteMany(context.TODO(), bson.D{{}})
 }
 
 func (collection *ProfileMongoDb) Update(id primitive.ObjectID, profile *domain.Profile) (*domain.Profile, error) {
@@ -152,6 +157,15 @@ func (collection *ProfileMongoDb) filterMessages(filter interface{}) ([]*domain.
 	}
 
 	return decodeMessages(cursor)
+}
+
+func (collection *ProfileMongoDb) InsertNotification(notification *domain.Notification) error {
+	result, err := collection.notifications.InsertOne(context.TODO(), notification)
+	if err != nil {
+		return err
+	}
+	notification.Id = result.InsertedID.(primitive.ObjectID)
+	return nil
 }
 
 func decode(cursor *mongo.Cursor) (profiles []*domain.Profile, err error) {

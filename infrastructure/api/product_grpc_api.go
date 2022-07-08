@@ -89,6 +89,10 @@ func (handler *ProfileHandler) GetByName(ctx context.Context, request *pb.GetByN
 
 func (handler *ProfileHandler) Create(ctx context.Context, request *pb.NewProfile) (*pb.Profile, error) {
 	profile := mapNewProfile(request)
+	profile.ReceivesConnectionNotifications = true
+	profile.ReceivesPostNotifications = true
+	profile.ReceivesMessageNotifications = true
+	profile.IsPrivate = false
 	err := handler.service.Create(profile)
 	if err != nil {
 		return nil, err
@@ -129,7 +133,7 @@ func (handler *ProfileHandler) Update(ctx context.Context, request *pb.Profile) 
 	if !response.Success {
 		// saga
 	}
-	
+
 	return mapProfile(updatedProfile), nil
 }
 
