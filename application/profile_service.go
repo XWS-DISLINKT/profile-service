@@ -52,6 +52,10 @@ func (service *ProfileService) GetNotificationsByUserId(receiverId string) ([]*d
 	return service.iProfileService.GetNotificationsByUserId(receiverId)
 }
 
+func (service *ProfileService) SeeNotificationsByUserId(receiverId string) ([]*domain.Notification, error) {
+	return service.iProfileService.SeeNotificationsByUserId(receiverId)
+}
+
 func (service *ProfileService) SendNotification(notification *domain.Notification) error {
 	return service.iProfileService.SendNotification(notification)
 }

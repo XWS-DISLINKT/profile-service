@@ -80,8 +80,28 @@ func (handler *ProfileHandler) GetNotificationsByUser(ctx context.Context, reque
 	return response, nil
 }
 
+func (handler *ProfileHandler) SeeNotificationsByUser(ctx context.Context, request *pb.GetNotificationsRequest) (*pb.GetNotificationsResponse, error) {
+	receiverId, err := primitive.ObjectIDFromHex(request.UserId)
+	if err != nil {
+		return nil, err
+	}
+	response := &pb.GetNotificationsResponse{
+		Notifications: []*pb.Notification{},
+	}
+	notifications, err := handler.service.SeeNotificationsByUserId(receiverId.Hex())
+
+	for _, notification := range notifications {
+		current := mapNotification(notification)
+		response.Notifications = append(response.Notifications, current)
+	}
+	return response, nil
+}
+
 func (handler *ProfileHandler) SendNotification(ctx context.Context, request *pb.NewNotificationRequest) (*pb.Notification, error) {
-	id := request.SenderId
+	return handler.CreateNotification(request.SenderId, request.ReceiverId, request.NotificationType)
+}
+func (handler *ProfileHandler) CreateNotification(senderId string, receiverId string, notificationType string) (*pb.Notification, error) {
+	id := senderId
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, nil
@@ -89,19 +109,19 @@ func (handler *ProfileHandler) SendNotification(ctx context.Context, request *pb
 	profile, err := handler.service.Get(objectId)
 	content := ""
 	senderName := profile.Name + " " + profile.LastName
-	idR := request.ReceiverId
+	idR := receiverId
 	objectIdR, err := primitive.ObjectIDFromHex(idR)
 	if err != nil {
 		return nil, nil
 	}
 	profileR, err := handler.service.Get(objectIdR)
-	if request.NotificationType == "message" && profileR.ReceivesMessageNotifications == true {
+	if notificationType == "message" && profileR.ReceivesMessageNotifications == true {
 		content = senderName + " has sent you a message"
-	} else if request.NotificationType == "post" && profileR.ReceivesPostNotifications == true {
+	} else if notificationType == "post" && profileR.ReceivesPostNotifications == true {
 		content = senderName + " has shared a new post"
-	} else if request.NotificationType == "request" && profileR.ReceivesConnectionNotifications == true {
+	} else if notificationType == "request" && profileR.ReceivesConnectionNotifications == true {
 		content = senderName + " has requested to follow you"
-	} else if request.NotificationType == "connection" && profileR.ReceivesConnectionNotifications == true {
+	} else if notificationType == "connection" && profileR.ReceivesConnectionNotifications == true {
 		content = senderName + " has started following you"
 	} else {
 		content = ""
@@ -110,8 +130,8 @@ func (handler *ProfileHandler) SendNotification(ctx context.Context, request *pb
 		Id:               primitive.NewObjectID(),
 		Content:          content,
 		Seen:             false,
-		NotificationType: request.NotificationType,
-		ReceiverId:       request.ReceiverId,
+		NotificationType: notificationType,
+		ReceiverId:       receiverId,
 	}
 	if content == "" {
 		return mapNotification(notification), nil
@@ -196,6 +216,7 @@ func (handler *ProfileHandler) SendMessage(ctx context.Context, request *pb.Mess
 	if err != nil {
 		return nil, err
 	}
+	handler.CreateNotification(request.SenderId, request.ReceiverId, "message")
 	return mapMessage(message), nil
 }
 

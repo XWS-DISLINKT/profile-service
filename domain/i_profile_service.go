@@ -18,5 +18,6 @@ type IProfileService interface {
 
 	InsertNotification(notification *Notification) error
 	GetNotificationsByUserId(receiverId string) ([]*Notification, error)
+	SeeNotificationsByUserId(receiverId string) ([]*Notification, error)
 	SendNotification(notification *Notification) error
 }

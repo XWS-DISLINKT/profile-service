@@ -167,6 +167,12 @@ func (collection *ProfileMongoDb) filterOne(filter interface{}) (profile *domain
 	return
 }
 
+func (collection *ProfileMongoDb) filterOneNotification(filter interface{}) (profile *domain.Notification, err error) {
+	result := collection.notifications.FindOne(context.TODO(), filter)
+	err = result.Decode(&profile)
+	return
+}
+
 func (collection *ProfileMongoDb) filterMessages(filter interface{}) ([]*domain.Message, error) {
 	cursor, err := collection.messages.Find(context.TODO(), filter)
 	defer cursor.Close(context.TODO())
@@ -194,6 +200,21 @@ func (collection *ProfileMongoDb) InsertNotification(notification *domain.Notifi
 	}
 	notification.Id = result.InsertedID.(primitive.ObjectID)
 	return nil
+}
+
+func (collection *ProfileMongoDb) SeeNotificationsByUserId(id string) ([]*domain.Notification, error) {
+	result, err := collection.notifications.UpdateMany(
+		context.TODO(), bson.M{"receiverId": id}, bson.D{
+			{"$set", bson.D{
+				{"seen", true},
+			}},
+		})
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("Updated %v", result.ModifiedCount)
+	filter := bson.M{"receiverId": id}
+	return collection.filterNotifications(filter)
 }
 
 func decode(cursor *mongo.Cursor) (profiles []*domain.Profile, err error) {
