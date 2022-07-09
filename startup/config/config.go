@@ -21,8 +21,8 @@ func NewConfig() *Config {
 			Port:           os.Getenv("PROFILE_SERVICE_PORT"),
 			ProfileDBHost:  os.Getenv("PROFILE_DB_HOST"),
 			ProfileDBPort:  os.Getenv("PROFILE_DB_PORT"),
-			ConnectionHost: os.Getenv("CONNECTION_HOST"),
-			ConnectionPort: os.Getenv("CONNECTION_PORT"),
+			ConnectionHost: os.Getenv("CONNECTION_SERVICE_HOST"),
+			ConnectionPort: os.Getenv("CONNECTION_SERVICE_PORT"),
 		}
 	} else {
 		fmt.Println("local")
