@@ -177,3 +177,27 @@ func mapMessage(message *domain.Message) *pb.Message {
 
 	return messagePb
 }
+
+func mapNotification(notification *domain.Notification) *pb.Notification {
+	notificationPb := &pb.Notification{
+		Id:               notification.Id.Hex(),
+		Content:          notification.Content,
+		Date:             timestamppb.New(notification.Date),
+		Seen:             notification.Seen,
+		NotificationType: notification.NotificationType,
+		ReceiverId:       notification.ReceiverId,
+	}
+
+	return notificationPb
+}
+func mapToDomainNotification(notificationPb *pb.Notification) *domain.Notification {
+	notification := &domain.Notification{
+		Id:               primitive.NewObjectID(),
+		Content:          notificationPb.Content,
+		Date:             notificationPb.Date.AsTime(),
+		Seen:             notificationPb.Seen,
+		NotificationType: notificationPb.NotificationType,
+		ReceiverId:       notificationPb.ReceiverId,
+	}
+	return notification
+}

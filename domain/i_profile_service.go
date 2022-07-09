@@ -17,4 +17,6 @@ type IProfileService interface {
 	GetChatMessages(senderId primitive.ObjectID, receiverId primitive.ObjectID) ([]*Message, error)
 
 	InsertNotification(notification *Notification) error
+	GetNotificationsByUserId(receiverId string) ([]*Notification, error)
+	SendNotification(notification *Notification) error
 }

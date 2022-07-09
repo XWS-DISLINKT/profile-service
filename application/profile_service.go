@@ -47,3 +47,11 @@ func (service *ProfileService) SendMessage(message *domain.Message) error {
 func (service *ProfileService) GetChatMessages(senderId primitive.ObjectID, receiverId primitive.ObjectID) ([]*domain.Message, error) {
 	return service.iProfileService.GetChatMessages(senderId, receiverId)
 }
+
+func (service *ProfileService) GetNotificationsByUserId(receiverId string) ([]*domain.Notification, error) {
+	return service.iProfileService.GetNotificationsByUserId(receiverId)
+}
+
+func (service *ProfileService) SendNotification(notification *domain.Notification) error {
+	return service.iProfileService.SendNotification(notification)
+}

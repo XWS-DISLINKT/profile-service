@@ -80,6 +80,21 @@ func (collection *ProfileMongoDb) GetChatMessages(senderId primitive.ObjectID, r
 
 	return collection.filterMessages(filter)
 }
+func (collection *ProfileMongoDb) SendNotification(notification *domain.Notification) error {
+	result, err := collection.notifications.InsertOne(context.TODO(), notification)
+	if err != nil {
+		return err
+	}
+	notification.Id = result.InsertedID.(primitive.ObjectID)
+	return nil
+}
+func (collection *ProfileMongoDb) GetNotificationsByUserId(receiverId string) ([]*domain.Notification, error) {
+	//filter := bson.D{{}}
+	filter := bson.M{"receiverId": receiverId}
+
+	fmt.Println("{1}", receiverId)
+	return collection.filterNotifications(filter)
+}
 
 func (collection *ProfileMongoDb) DeleteAll() {
 	collection.profiles.DeleteMany(context.TODO(), bson.D{{}})
@@ -162,6 +177,16 @@ func (collection *ProfileMongoDb) filterMessages(filter interface{}) ([]*domain.
 	return decodeMessages(cursor)
 }
 
+func (collection *ProfileMongoDb) filterNotifications(filter interface{}) ([]*domain.Notification, error) {
+	cursor, err := collection.notifications.Find(context.TODO(), filter)
+	defer cursor.Close(context.TODO())
+	if err != nil {
+		return nil, err
+	}
+
+	return decodeNotifications(cursor)
+}
+
 func (collection *ProfileMongoDb) InsertNotification(notification *domain.Notification) error {
 	result, err := collection.notifications.InsertOne(context.TODO(), notification)
 	if err != nil {
@@ -192,6 +217,19 @@ func decodeMessages(cursor *mongo.Cursor) (messages []*domain.Message, err error
 			return
 		}
 		messages = append(messages, &message)
+	}
+	err = cursor.Err()
+	return
+}
+
+func decodeNotifications(cursor *mongo.Cursor) (notifications []*domain.Notification, err error) {
+	for cursor.Next(context.TODO()) {
+		var notification domain.Notification
+		err = cursor.Decode(&notification)
+		if err != nil {
+			return
+		}
+		notifications = append(notifications, &notification)
 	}
 	err = cursor.Err()
 	return
