@@ -184,6 +184,39 @@ var profiles = []*domain.Profile{
 		ReceivesConnectionNotifications: true,
 		ReceivesPostNotifications:       true,
 	},
+	{
+		Id:          getObjectId("623b0cc3a34d25d8567f9f89"),
+		Name:        "Admin",
+		LastName:    "Admin",
+		Username:    "admin",
+		Email:       "admin@gmail.com",
+		Password:    "admin",
+		PhoneNumber: "+381 66 123 45 67",
+		Biography:   "",
+		Education:   []domain.Education{
+			//{
+			//	Id:           getObjectId("623b0cc3a34d25d8567f9f09"),
+			//	School:       "Elektrotehnicki fakultet, Beograd",
+			//	FieldOfStudy: "Softversko inzenjerstvo",
+			//	Degree:       "Master's degree",
+			//},
+		},
+		Experience: []domain.Experience{
+			//{
+			//	Id:          getObjectId("623b0cc3a34d25d8567f9f02"),
+			//	JobTitle:    "Software Developer",
+			//	CompanyName: "Nordeus, Serbia",
+			//	Description: "Full time",
+			//},
+		},
+		Skills:                          []string{},
+		Interests:                       []string{},
+		IsPrivate:                       true,
+		ReceivesMessageNotifications:    true,
+		ReceivesConnectionNotifications: true,
+		ReceivesPostNotifications:       true,
+		IsAdmin:                         true,
+	},
 }
 
 var notifications = []*domain.Notification{

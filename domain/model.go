@@ -25,6 +25,7 @@ type Profile struct {
 	ReceivesMessageNotifications    bool               `bson:"receivesMessageNotifications"`
 	ReceivesPostNotifications       bool               `bson:"receivesPostNotifications"`
 	ReceivesConnectionNotifications bool               `bson:"receivesConnectionNotifications"`
+	IsAdmin                         bool               `bson:"isAdmin"`
 }
 
 type Message struct {
