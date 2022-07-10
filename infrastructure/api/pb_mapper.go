@@ -79,6 +79,7 @@ func mapProfile(profile *domain.Profile) *pb.Profile {
 		ReceivesMessageNotifications:    profile.ReceivesMessageNotifications,
 		ReceivesPostNotifications:       profile.ReceivesPostNotifications,
 		ReceivesConnectionNotifications: profile.ReceivesConnectionNotifications,
+		IsAdmin:                         profile.IsAdmin,
 	}
 
 	for _, skill := range profile.Skills {
