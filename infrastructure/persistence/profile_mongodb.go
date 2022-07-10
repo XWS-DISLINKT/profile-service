@@ -123,6 +123,7 @@ func (collection *ProfileMongoDb) Update(id primitive.ObjectID, profile *domain.
 				{"receivesMessageNotifications", profile.ReceivesMessageNotifications},
 				{"receivesPostNotifications", profile.ReceivesPostNotifications},
 				{"isAdmin", profile.IsAdmin},
+				{"available", profile.Available},
 			}},
 		})
 	if err != nil {

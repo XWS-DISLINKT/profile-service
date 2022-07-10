@@ -200,12 +200,14 @@ func (handler *ProfileHandler) Create(ctx context.Context, request *pb.NewProfil
 	if err != nil {
 		return nil, err
 	}
+	/*
+		user := connection.User{UserId: profile.Id.Hex(), IsPrivate: profile.IsPrivate}
 
-	user := connection.User{UserId: profile.Id.Hex(), IsPrivate: profile.IsPrivate}
-	response, err := services.ConnectionsClient(handler.connectionServiceAddress).InsertUser(ctx, &user)
-	if !response.Success {
-		//implementirati sagu
-	}
+		response, err := services.ConnectionsClient(handler.connectionServiceAddress).InsertUser(ctx, &user)
+		if !response.Success {
+			//implementirati sagu
+		}
+	*/
 
 	return mapProfile(profile), nil
 }

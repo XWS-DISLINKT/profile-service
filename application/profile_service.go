@@ -8,11 +8,13 @@ import (
 
 type ProfileService struct {
 	iProfileService domain.IProfileService
+	orchestrator    *CreateUserOrchestrator
 }
 
-func NewProfileService(iProfileService domain.IProfileService) *ProfileService {
+func NewProfileService(iProfileService domain.IProfileService, orchestrator *CreateUserOrchestrator) *ProfileService {
 	return &ProfileService{
 		iProfileService: iProfileService,
+		orchestrator:    orchestrator,
 	}
 }
 
@@ -25,7 +27,16 @@ func (service *ProfileService) GetAll() ([]*domain.Profile, error) {
 }
 
 func (service *ProfileService) Create(profile *domain.Profile) error {
-	return service.iProfileService.Insert(profile)
+	profile.Available = false
+	err := service.iProfileService.Insert(profile)
+	if err != nil {
+		return err
+	}
+	err = service.orchestrator.Start(profile)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (service *ProfileService) Update(id primitive.ObjectID, profile *domain.Profile) (*domain.Profile, error) {
@@ -58,4 +69,14 @@ func (service *ProfileService) SeeNotificationsByUserId(receiverId string) ([]*d
 
 func (service *ProfileService) SendNotification(notification *domain.Notification) error {
 	return service.iProfileService.SendNotification(notification)
+}
+
+func (service *ProfileService) Approve(profile *domain.Profile) error {
+	profile, err := service.Get(profile.Id)
+	if err != nil {
+		return err
+	}
+	profile.Available = true
+	_, err = service.iProfileService.Update(profile.Id, profile)
+	return err
 }
