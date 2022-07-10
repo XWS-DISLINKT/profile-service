@@ -122,6 +122,7 @@ func (collection *ProfileMongoDb) Update(id primitive.ObjectID, profile *domain.
 				{"receivesConnectionNotifications", profile.ReceivesConnectionNotifications},
 				{"receivesMessageNotifications", profile.ReceivesMessageNotifications},
 				{"receivesPostNotifications", profile.ReceivesPostNotifications},
+				{"isAdmin", profile.IsAdmin},
 			}},
 		})
 	if err != nil {
